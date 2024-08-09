@@ -43,6 +43,8 @@
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
+uint8_t s1_pressed = 0;
+uint8_t s2_pressed = 0;
 
 /* USER CODE END PV */
 
@@ -56,6 +58,15 @@ static void MX_USART2_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+  if (GPIO_Pin == S1_Pin) {
+	  s1_pressed = 1;
+  }
+  if (GPIO_Pin == S2_Pin) {
+	s2_pressed = 1;
+  }
+}
 
 /* USER CODE END 0 */
 
@@ -97,6 +108,14 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  if (s1_pressed != 0) {
+		  s1_pressed = 0;
+		  HAL_UART_Transmit(&huart2, "S1 Pressed\r\n", 12, 10);
+	  }
+	  if (s2_pressed != 0) {
+		  s2_pressed = 0;
+		  HAL_UART_Transmit(&huart2, "S2 Pressed\r\n", 12, 10);
+	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
