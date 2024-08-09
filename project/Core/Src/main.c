@@ -106,15 +106,36 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  uint32_t d3_blinks = 0;
+  uint32_t d3_tick = 0;
+
+  uint32_t d4_blinks = 0;
+  uint32_t d4_tick = 0;
   while (1)
   {
 	  if (s1_pressed != 0) {
 		  s1_pressed = 0;
 		  HAL_UART_Transmit(&huart2, "S1 Pressed\r\n", 12, 10);
+		  d3_blinks = 6;
 	  }
 	  if (s2_pressed != 0) {
 		  s2_pressed = 0;
 		  HAL_UART_Transmit(&huart2, "S2 Pressed\r\n", 12, 10);
+		  d4_blinks = 6;
+	  }
+	  if (d3_blinks > 0) {
+		  if (d3_tick < HAL_GetTick()){
+			  HAL_GPIO_TogglePin(D3_GPIO_Port, D3_Pin);
+			  d3_tick = HAL_GetTick() + 250;
+			  d3_blinks--;
+		  }
+	  }
+	  if (d4_blinks > 0) {
+		  if (d4_tick < HAL_GetTick()){
+			  HAL_GPIO_TogglePin(D4_GPIO_Port, D4_Pin);
+			  d4_tick = HAL_GetTick() + 250;
+			  d4_blinks--;
+		  }
 	  }
     /* USER CODE END WHILE */
 
