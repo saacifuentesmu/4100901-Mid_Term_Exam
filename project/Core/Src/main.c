@@ -106,9 +106,11 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  uint32_t s1_last_pressed_tick = 0;
   uint32_t d3_blinks = 0;
   uint32_t d3_tick = 0;
 
+  uint32_t s2_last_pressed_tick = 0;
   uint32_t d4_blinks = 0;
   uint32_t d4_tick = 0;
   while (1)
@@ -117,11 +119,19 @@ int main(void)
 		  s1_pressed = 0;
 		  HAL_UART_Transmit(&huart2, "S1 Pressed\r\n", 12, 10);
 		  d3_blinks = 6;
+		  if (HAL_GetTick() - s1_last_pressed_tick < 500) {
+			  d3_blinks = 0xFFFFFFFF;
+		  }
+		  s1_last_pressed_tick = HAL_GetTick();
 	  }
 	  if (s2_pressed != 0) {
 		  s2_pressed = 0;
 		  HAL_UART_Transmit(&huart2, "S2 Pressed\r\n", 12, 10);
 		  d4_blinks = 6;
+		  if (HAL_GetTick() - s2_last_pressed_tick < 500) {
+			  d4_blinks = 0xFFFFFFFF;
+		  }
+		  s2_last_pressed_tick = HAL_GetTick();
 	  }
 	  if (d3_blinks > 0) {
 		  if (d3_tick < HAL_GetTick()){
