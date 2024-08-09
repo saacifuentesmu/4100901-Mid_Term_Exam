@@ -60,6 +60,7 @@ static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN 0 */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
+  // 1. Tener 2 botones: Giro Izquierda(S1), Giro Derecha(S2).
   if (GPIO_Pin == S1_Pin) {
 	  s1_pressed = 1;
   }
@@ -101,7 +102,7 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  // 3. Tener un puerto de depuración con el PC (USART2)
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -117,27 +118,37 @@ int main(void)
   {
 	  if (s1_pressed != 0) {
 		  s1_pressed = 0;
+		  // 4. Debe enviar mensajes de información por la consola cuando hayan eventos en el sistema.
 		  HAL_UART_Transmit(&huart2, "S1 Pressed\r\n", 12, 10);
+		  // 5. Si un botón de giro se presiona 1 vez: la luz del lado correspondiente parpadea 3 veces.
 		  d3_blinks = 6;
 		  if (HAL_GetTick() - s1_last_pressed_tick < 500) {
+			  // 6. Si un botón de giro se presiona 2 o mas veces durante 500ms: la luz del lado correspondiente parpadea indefinidamente.
 			  d3_blinks = 0xFFFFFFFF;
 		  }
 		  s1_last_pressed_tick = HAL_GetTick();
+		  // 7. Si un botón de giro se presiona y la luz del otro lado esta activa: se desactiva la luz del otro lado.
 		  d4_blinks = 0;
 	  }
 	  if (s2_pressed != 0) {
 		  s2_pressed = 0;
+		  // 4. Debe enviar mensajes de información por la consola cuando hayan eventos en el sistema.
 		  HAL_UART_Transmit(&huart2, "S2 Pressed\r\n", 12, 10);
+		  // 5. Si un botón de giro se presiona 1 vez: la luz del lado correspondiente parpadea 3 veces.
 		  d4_blinks = 6;
 		  if (HAL_GetTick() - s2_last_pressed_tick < 500) {
+			  // 6. Si un botón de giro se presiona 2 o mas veces durante 500ms: la luz del lado correspondiente parpadea indefinidamente.
 			  d4_blinks = 0xFFFFFFFF;
 		  }
 		  s2_last_pressed_tick = HAL_GetTick();
+		  // 7. Si un botón de giro se presiona y la luz del otro lado esta activa: se desactiva la luz del otro lado.
 		  d3_blinks = 0;
 	  }
+	  // 2. Tener 2 luces(LEDs): Luz Izquierda(D3), Luz Derecha(D4).
 	  if (d3_blinks > 0) {
 		  if (d3_tick < HAL_GetTick()){
 			  HAL_GPIO_TogglePin(D3_GPIO_Port, D3_Pin);
+			  // 8. La frecuencia de parpadeo de las luces debe ser de 2Hz (toggle every 250ms).
 			  d3_tick = HAL_GetTick() + 250;
 			  d3_blinks--;
 		  }
@@ -145,6 +156,7 @@ int main(void)
 	  if (d4_blinks > 0) {
 		  if (d4_tick < HAL_GetTick()){
 			  HAL_GPIO_TogglePin(D4_GPIO_Port, D4_Pin);
+			  // 8. La frecuencia de parpadeo de las luces debe ser de 2Hz (toggle every 250ms).
 			  d4_tick = HAL_GetTick() + 250;
 			  d4_blinks--;
 		  }
