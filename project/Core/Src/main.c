@@ -123,6 +123,7 @@ int main(void)
 			  d3_blinks = 0xFFFFFFFF;
 		  }
 		  s1_last_pressed_tick = HAL_GetTick();
+		  d4_blinks = 0;
 	  }
 	  if (s2_pressed != 0) {
 		  s2_pressed = 0;
@@ -132,6 +133,7 @@ int main(void)
 			  d4_blinks = 0xFFFFFFFF;
 		  }
 		  s2_last_pressed_tick = HAL_GetTick();
+		  d3_blinks = 0;
 	  }
 	  if (d3_blinks > 0) {
 		  if (d3_tick < HAL_GetTick()){
